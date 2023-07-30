@@ -34,7 +34,6 @@ contract SimpleNFT is ERC721Enumerable, Ownable {
 
         for (uint256 i = 0; i < buyers.length; i++) {
             address buyer = buyers[i];
-            require(buyer != address(0), "Invalid buyer address");
 
             // Perform ERC20 transfer for the price
             AUCTION_CURRENCY.safeTransferFrom(buyer, address(this), price);
