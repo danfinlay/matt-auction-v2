@@ -1,0 +1,18 @@
+{
+  "name": "matt-auction-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "types.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eip712-codegen": "^6.0.8",
+    "yargs": "^17.7.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3"
+  }
+}
