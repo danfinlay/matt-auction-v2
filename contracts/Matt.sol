@@ -4,8 +4,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract SimpleNFT is ERC721Enumerable, Ownable {
+    using SafeERC20 for IERC20;
+
     IERC20 public AUCTION_CURRENCY;
     bool private minted;
     string private baseTokenURI;
@@ -34,8 +37,7 @@ contract SimpleNFT is ERC721Enumerable, Ownable {
             require(buyer != address(0), "Invalid buyer address");
 
             // Perform ERC20 transfer for the price
-            bool transferSuccessful = AUCTION_CURRENCY.transferFrom(buyer, address(this), price);
-            require(transferSuccessful, "Token transfer failed");
+            AUCTION_CURRENCY.safeTransferFrom(buyer, address(this), price);
 
             // Issue the NFT to the buyer
             uint256 tokenId = totalSupply() + 1;
