@@ -7,12 +7,28 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract SimpleNFT is ERC721Enumerable, Ownable {
     IERC20 public AUCTION_CURRENCY;
+    bool private minted;
+    string private baseTokenURI;
 
-    constructor(address auctionCurrencyAddress) ERC721("SimpleNFT", "SNFT") {
+    constructor(
+        address auctionCurrencyAddress,
+        string memory _baseTokenURI,
+        string memory name,
+        string memory symbol
+    ) ERC721(name, symbol) {
         AUCTION_CURRENCY = IERC20(auctionCurrencyAddress);
+        minted = false;
+        baseTokenURI = _baseTokenURI;
+    }
+
+    function setBaseTokenURI(string calldata _baseTokenURI) external onlyOwner {
+        baseTokenURI = _baseTokenURI;
     }
 
     function mint(uint256 price, address[] calldata buyers) external onlyOwner {
+        require(!minted, "Minting already done");
+        minted = true;
+
         for (uint256 i = 0; i < buyers.length; i++) {
             address buyer = buyers[i];
             require(buyer != address(0), "Invalid buyer address");
@@ -22,7 +38,12 @@ contract SimpleNFT is ERC721Enumerable, Ownable {
             require(transferSuccessful, "Token transfer failed");
 
             // Issue the NFT to the buyer
-            _mint(buyer, totalSupply() + 1);
+            uint256 tokenId = totalSupply() + 1;
+            _mint(buyer, tokenId);
         }
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return baseTokenURI;
     }
 }
